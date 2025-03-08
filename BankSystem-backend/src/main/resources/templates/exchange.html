@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{layout/main_login}">
+<head>
+<meta charset="UTF-8">
+<title th:fragment="title">網銀換匯</title>
+</head>
+<body>
+
+	<div th:fragment="content">
+
+		<div class="text-center fs-1 mt-5 mb-3 ">換匯</div>
+
+		<div class="container">
+			<div class="row justify-content-center">
+				<div class="bg-light rounded col-md-6 p-5">
+					
+					  
+					<form th:action="@{/bank/transaction/exchange/check}" th:object="${exchangeDto}" method="post">
+					
+						<div class="d-flex justify-content-around align-items-center mb-4">
+							<div>
+								<div class="mb-3">
+									<label class="form-label col-form-label-lg" for="fromAccountNumber">換匯帳號</label>
+									<select class="form-select form-control-lg" id="fromAccountNumber" th:field="*{fromAccountNumber}">
+										<option th:each="twdAccount:${twdAccounts}"
+						                        th:text="${twdAccount.getCurrency.getName} +'帳號 (' + ${twdAccount.getAccountNumber} + ' )'"
+						                        th:value="${twdAccount.getAccountNumber}">
+						                </option>	
+									</select>
+								</div>
+								
+								<div class="mb-3">
+									<label class="form-label col-form-label-lg" for="amount">金額</label>
+									<input type="number" th:field="*{amount}" class="form-control form-control-lg"  id="amount" min="1" required> 	<!-- min 前端驗證金額 -->					
+								</div>
+							</div>
+
+							<div class="mx-4">
+								<img src="/picture/exchange-alt.png" width="35" height="35">
+							</div>
+
+							<div>
+							
+							    <!-- 選擇貨幣 -->
+							    
+							    <div class="mb-3">
+									<label class="form-label col-form-label-lg" for="targetCurrency">選擇幣別</label>
+									<select class="form-select form-control-lg" id="targetCurrency" onchange="changeRate(event)" required>
+										 <option value="" disabled selected>請選擇</option>
+										 <option th:each="foreignExchangeRate:${foreignExchangeRates}"
+		                    					 th:text="${foreignExchangeRate.getCurrencyName}"
+			    							     th:value="${foreignExchangeRate.getSpotSell}" 
+			    							     th:attr= "data-code = ${foreignExchangeRate.getCurrencyCode}">
+		                    			 </option>
+									</select>
+								</div>
+								
+								<!-- 提取匯率貨幣代碼，用於下步驟尋找帳號 ( 利用 th:attr + JS ) -->
+											
+								<input type="hidden" id="currencyCode" name="currencyCode">				
+								
+								<!-- 顯示匯率  -->										
+									
+								<div class="mb-3">
+									<label class="form-label col-form-label-lg" >當前匯率</label>
+									<input type="number" class="form-control form-control-lg" name="targetRate" id="targetRate" readonly> 
+								</div>
+													
+							</div>
+						</div>
+						
+						<div class="d-flex justify-content-center">
+							<button type="submit" class="btn btn-success btn-lg">開始換匯</button>
+						</div>
+
+					</form>	
+							
+				</div>
+			</div>
+		</div>
+		
+		
+		<script>
+    
+    	function changeRate(event) {
+    		
+    		// 顯示對應匯率
+        
+	        const targetRate = event.target.value;                   // 取得選擇的匯率
+	        
+	        const showRate = document.getElementById('targetRate');  // 將選擇的匯率顯示在 input 中
+	        
+	        showRate.value = targetRate;                             // 正確設置 value 屬性
+	        
+	        
+	        // 提取貨幣代碼
+	        
+	        const selectedOption = event.target.options[event.target.selectedIndex];  // options 為所有 select 選項集合，selectedIndex 會尋找 e 在集合中的位置
+	        
+	        const code = selectedOption.getAttribute('data-code');                    // getAttribute 獲得資料
+	        
+	        const codeInput = document.getElementById('currencyCode');
+	        
+	        codeInput.value = code ;
+        
+    	}
+    
+    	</script>
+		
+
+	</div>
+	
+
+	<!--  
+	
+	<form th:action="@{/bank/transaction/exchange/check}" th:object="${exchangeDto}" method="post">
+	
+	            <label>新台幣</label> <br> <input type="number" th:field="*{amount}"> <br> <label>選擇幣別</label> <br>
+	            <select name="targetRate">
+	                <option th:each="foreignExchangeRate:${foreignExchangeRates}"
+	                    th:text="${foreignExchangeRate.currencyName} + ' (' + ${foreignExchangeRate.spotSell} + ')'"
+	                    th:value="${foreignExchangeRate.spotSell}"></option>
+	            </select> <br> 
+	            
+	            <label>轉出帳號</label> 
+	            <select th:field="*{fromAccountNumber}" >
+	                <option th:each="twdAccount:${twdAccounts}"
+	                        th:text="${twdAccount.getCurrency.getName} +'帳號 (' + ${twdAccount.getAccountNumber}"
+	                        th:value="${twdAccount.getAccountNumber}">
+	                </option>
+	            </select> 
+	            <br>
+	             
+	            <label>轉入帳號</label> 
+	            <select th:field="*{toAccountNumber}">  <!-- th:field 應該用於 select 因為表單提交的互動是 select  -- >
+	                <option th:each="foreignAccount:${foreignAccounts}"
+	                    th:text="${foreignAccount.getCurrency.getName} +'帳號 (' + ${foreignAccount.getAccountNumber} +')'"
+	                    th:value="${foreignAccount.getAccountNumber}"></option>
+	            </select> <br> 
+	            
+	            <label>備註</label> 
+	            <input type="text" th:field="*{description}"> <br>
+	
+	            <button type="submit">下一步</button>
+	
+	</form>
+	
+	-->
+	
+	<!-- 顯示匯率測試
+	
+	<label>選擇幣別</label> <br>      
+	<select id="targetCurrency" onchange="changeRate(event)">                           
+		<option value="" disabled selected>請選擇</option>
+		
+		<option th:each="foreignExchangeRate:${foreignExchangeRates}"
+			    th:text="${foreignExchangeRate.getCurrencyName} "
+			    th:value="${foreignExchangeRate.getSpotSell}" 
+			    > 
+	    </option>
+	</select>
+	
+	<div>
+    	<label>當前匯率</label>
+    	<input id="targetRate" readonly>
+    </div>
+    
+    <script>
+    
+    function changeRate(event) {
+        // 取得選擇的匯率
+        const targetRate = event.target.value;
+        
+        // 將選擇的匯率顯示在 input 中
+        const showRate = document.getElementById('targetRate');
+        showRate.value = targetRate;  // 正確設置 value 屬性
+    }
+    
+    </script>
+	
+	-->
+
+	<!--
+	
+    換臺幣 <br>
+	
+	<form th:if="${exchangeType.equals('BuyExchange')}" th:action="@{/bank/transaction/exchange/check}" th:object="${exchangeDto}" method="post" >  
+		
+		<label>新台幣</label> <br>
+		<input type="number" th:field="*{amount}"> <br>
+		
+		<label>選擇幣別</label> <br>     
+		<select name="targetSpotSell">                           
+			<option th:each="exchangeRate:${exchangeRates}"
+			        th:text="${exchangeRate.currencyName} + ' (' + ${exchangeRate.spotSell} + ')'"
+			        th:value="${exchangeRate.spotSell}"></option>
+		</select> <br>
+
+	    <label>轉出帳號</label>
+		<input type="number" th:field="*{fromAccountNumber}"> 
+		<br>
+	
+	    <label>轉入帳號</label>
+		<input type="number" th:field="*{toAccountNumber}"> 
+		<br>
+		
+		<label>備註</label>
+		<input type="text" th:field="*{description}"> 
+		<br>  
+		
+		<button type="submit">下一步</button>
+		
+	</form>
+	-->
+	
+	
+
+
+</body>
+</html>

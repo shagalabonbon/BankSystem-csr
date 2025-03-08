@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{layout/main_login_admin}">
+<head>
+<meta charset="UTF-8">
+<title th:fragment="title">用戶管理列表</title>
+<th:block th:fragment>
+	<link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.min.css">
+</th:block>
+</head>
+<body>
+
+	<div th:fragment="content">
+
+
+		<div class="container px-3">
+
+			<div class="row d-flex">
+				<form action="/bank/admin/user-manage" method="post" class="my-4">
+					<span class="fs-5">查詢用戶 ( 請輸入身分證字號 )：</span><input type="text"
+						name="idNumber">
+					<button type="submit" class="btn btn-success">查詢</button>
+				</form>
+
+				<!-- 顯示錯誤訊息 -->
+				<div th:if="${errorMessage!=null}"
+					class="alert alert-danger d-flex align-items-center" role="alert">
+					<div th:text="${errorMessage}"></div>
+				</div>
+			</div>
+
+
+			<table class="table" id="user-manage-table">
+				<thead>
+					<tr>
+						<th scope="col">編號</th>
+						<th scope="col">用戶</th>
+						<th scope="col">性別</th>
+						<th scope="col">郵箱</th>
+						<th scope="col">手機</th>
+						<th scope="col">權限</th>
+						<th scope="col">修改</th>
+						<th scope="col">刪除</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="allUserDto:${allUserDtos}">
+						<th scope="row" th:text="${ allUserDto.id }"></th>
+						<td th:text="${ allUserDto.username }"></td>
+						<td th:text="${ allUserDto.gender }"></td>
+						<td th:text="${ allUserDto.email }"></td>
+						<td th:text="${ allUserDto.phone }"></td>
+						<td th:text="${ allUserDto.role }"></td>
+						<td><a
+							th:href="@{/bank/admin/user-manage/{id}/update(id=${allUserDto.id})}"
+							class="btn btn-outline-warning">修改</a></td>
+						<!-- 使用 <a> 設計按鈕 -->
+						<td>
+							<form
+								th:action="@{/bank/admin/user-manage/{id}/remove(id=${allUserDto.id})}"
+								method="post">
+								<button type="submit" class="btn btn-outline-danger">刪除</button>
+							</form>
+						</td>
+
+					</tr>
+				</tbody>
+			</table>
+
+		</div>
+
+	</div>
+
+</body>
+</html>

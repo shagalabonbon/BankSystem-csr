@@ -1,0 +1,50 @@
+<div th:fragment="login_header" >
+
+	<nav class="navbar navbar-light bg-white p-3 ">
+		<div class="container-fluid">
+			<!-- Logo -->
+			<a class="navbar-brand" href="/bank/index"> <img
+				src="/picture/logo-horizontal.png" alt="logo" width="110"
+				height="30" class="d-inline-block align-text-middle rounded">
+			</a>
+
+			<!-- 收合按鈕 -->
+			<button class="navbar-toggler" type="button"
+				data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
+				aria-controls="offcanvasNavbar">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+
+			<!-- offcanvas -->
+			<div class="offcanvas offcanvas-end" tabindex="-1"
+				id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+				<div class="offcanvas-header">
+					<h5 class="offcanvas-title" id="offcanvasNavbarLabel">功能</h5>
+					<button type="button" class="btn-close text-reset"
+						data-bs-dismiss="offcanvas" aria-label="Close"></button>
+				</div>
+				
+				<!-- 功能變更，修改這邊就行 -->
+				<div class="offcanvas-body">
+					<ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+						<li class="nav-item"><a class="nav-link active" aria-current="page" href="/bank/index">首頁</a></li>
+						<li class="nav-item"><a class="nav-link" href="/bank/transaction/transfer">台幣轉帳</a></li>
+						<li class="nav-item"><a class="nav-link" href="/bank/transaction/exchange">外幣兌換</a></li>
+						<li class="nav-item"><a class="nav-link" href="/bank/transaction/exchange-rate">牌告匯率</a></li>
+						<li class="nav-item"><a class="nav-link" href="/bank/account/all-account">帳號資訊</a></li>
+						<li class="nav-item"><a class="nav-link" href="/bank/user/update">資料變更</a></li>
+						<li class="nav-item"><a class="nav-link" href="/bank/account/foreign-account">外幣帳號申請</a></li>		
+					</ul>
+					<form th:action="@{/bank/logout}" method="post" class="my-3">
+						<button type="submit" class="btn btn-danger">登出</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</nav>
+
+
+
+
+
+</div>

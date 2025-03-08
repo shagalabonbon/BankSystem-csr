@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/main_login}">
+<head>
+<meta charset="UTF-8">
+<title th:fragment="title">用戶首頁</title>
+</head>
+
+<body>
+
+
+	<div th:fragment="content" >
+	
+	<div class="text-center fs-1 mt-5 mb-3 ">
+		<h1>
+			親愛的 <span th:text="${loginUserDto.username}"></span> 
+			<span th:if="${loginUserDto.gender=='female'}">女士</span> 
+			<span th:if="${loginUserDto.gender=='male'}">先生</span> 
+			您好
+		</h1>
+	</div>
+
+
+		<div class="container d-flex">
+			<div class="card m-3" style="width: 18rem;" th:each="account:${accounts}">
+				<div class="card-body">
+					<h5 class="card-title fw-bold" >
+						<span th:text="${account.currency.name}" ></span>帳戶
+					</h5>
+
+					<div class="my-3">
+						帳號：<span class="" th:text="${account.accountNumber}"></span>
+					</div>
+					<div class="mb-3">
+						存款：<span class="" th:text="${account.balance}"></span>
+					</div>
+					<div class="mb-3">
+						幣別：<span class="" th:text="${account.currency.name} + ' (' + ${account.currency.code} + ')' "></span>
+					</div>
+
+					<form th:action="@{/bank/account/{id}/transaction-history (id=${account.id})}" method="get">
+						<button class="btn btn-warning border border-dark" type="submit">查詢交易紀錄</button>
+					</form>
+
+				</div>
+			</div>
+		</div>
+
+	<!--
+	
+	<div >
+	
+		<span></span>
+		<span>總存款：</span>
+		
+	</div>
+
+	<div>
+		外幣帳戶： <br> 總存款：
+	</div>
+
+	</div>
+	<nav>
+		<a href="/bank/transaction/transfer">轉帳</a> 
+		<a href="/bank/transaction/exchange">換匯</a> 
+		<a href="/bank/account/all-account">我的帳號</a>
+		<a href="/bank/user/update">變更用戶資料</a>
+		<a href="/bank/transaction/exchange-rate">當日牌價匯率</a>
+		<a href="/bank/account/foreign-account">申請外幣帳號</a>
+			
+		<form th:action="@{/bank/logout}" method="post">
+			<button type="submit">登出</button>
+		</form>
+	</nav>	
+	-->
+
+	
+
+
+	
+
+
+</body>
+</html>

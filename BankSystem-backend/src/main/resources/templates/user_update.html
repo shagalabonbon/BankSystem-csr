@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{layout/main_login}">
+<!-- 引入 Thymeleaf -->
+<head>
+<meta charset="UTF-8">
+<title th:fragment="title">用戶資料變更</title>
+
+</head>
+<body>
+
+	<div th:fragment="content">
+		<!-- 替換 layout/main 的 ~{::content} -->
+
+		<div class="text-center fs-1 mt-5 mb-3 ">用戶資料變更</div>
+
+		<div class="container">
+			<div class="row justify-content-center">
+				<div class="bg-light p-4 rounded col-md-4 p-5 ">
+					<form th:action="@{/bank/user/update/{id}(id=${loginUserDto.id})}"
+						th:object="${loginUserDto}" method="post"
+						class="d-flex flex-column">
+
+						<div class="mb-3">
+							<label for="username" class="form-label col-form-label-lg">姓名</label>
+							<input type="text" name="username" th:field="*{username}" placeholder="Name"
+								class="form-control form-control-lg" id="username" required readonly>
+						</div>
+						<div class="mb-3">
+							<label class="form-label col-form-label-lg" for="gender">性別</label>
+							<select class="form-select form-control-lg" id="gender" th:field="*{gender}"
+								name="gender">
+								<option value="male">男性</option>
+								<option value="female">女性</option>
+							</select>
+						</div>
+						<div class="mb-3">
+							<label for="email" class="form-label col-form-label-lg">電子郵件</label>
+							<input type="email" name="email" th:field="*{email}" placeholder="Email"
+								class="form-control form-control-lg" id="email" required>
+						</div>
+
+						<div class="mb-3">
+							<label for="phone" class="form-label col-form-label-lg">電話</label>
+							<input type="text" name="phone"  th:field="*{phone}" placeholder="Phone"
+								class="form-control form-control-lg" id="phone" required>
+						</div>
+						
+						<button type="submit" class="btn btn-success btn-lg mt-3" onclick="alert('資料更新成功！')">更新資料</button>
+
+					</form>
+				</div>
+			</div>
+		</div>
+
+	</div>
+	
+	<!--  
+
+	<h1>資料變更</h1>
+
+	<form th:action="@{/bank/user/update/{id}(id=${loginUserDto.id})}"
+		th:object="${loginUserDto}" method="post">
+
+		姓名：<input type="text" th:field="*{username}" placeholder="Name"
+			readonly>
+		<p />
+
+		郵箱：<input type="text" th:field="*{email}" placeholder="Email" required>
+		<p />
+		<!-- name 會自動映射到 @modelattribute 物件中的屬性 -- >
+
+		性別： <label><input type="radio" th:field="*{gender}"
+			value="male" required> 男</label> <label><input type="radio"
+			th:field="*{gender}" value="female" required> 女</label>
+		<p />
+
+		電話：<input type="text" th:field="*{phone}" placeholder="Phone" required>
+		<p />
+
+		<button type="submit">更新資料</button>
+		<p />
+
+	</form>
+
+    -->
+
+
+
+</body>
+</html>

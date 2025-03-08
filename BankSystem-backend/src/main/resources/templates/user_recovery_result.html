@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/main}"> <!-- 引入 Thymeleaf -->
+<head>
+<meta charset="UTF-8">
+<title th:fragment="title">註冊結果</title>  <!-- OK -->
+
+</head>
+<body>
+
+	<div th:fragment="content">
+		
+		<div class="container">
+			<div class="row justify-content-center">
+				<div class="text-center fs-1 pt-5 mb-3 ">
+					<img src="/picture/correct.png" alt="logo" width="35" height="35" class="d-inline-block align-text-middle">
+					 新密碼設定成功，請使用更新資料登入
+				</div>
+				
+				<div class="d-flex justify-content-center">
+					<img src="/picture/unlocked.png" alt="unlocked" width="300" height="300" class="">
+				</div>
+				
+				<form th:action="@{/bank/index}" method="get" class="d-flex justify-content-center mt-3">
+					<button type="submit" class="btn btn-primary btn-lg mt-3">返回首頁</button>
+				</form>
+				
+			</div>
+		</div> 
+		
+	</div>	
+
+</body>
+</html>

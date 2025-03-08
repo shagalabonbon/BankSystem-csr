@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" > <!-- 引入 Thymeleaf -->
+<head>
+<meta charset="UTF-8">
+<title>錯誤頁面</title>
+
+</head>
+<body>
+
+	<h1>發生錯誤</h1>
+
+    詳細資訊：<p th:text="${errorMessage}"></p>
+    
+    <button onclick="window.history.back()">返回上一頁</button>
+	
+
+</body>
+</html>

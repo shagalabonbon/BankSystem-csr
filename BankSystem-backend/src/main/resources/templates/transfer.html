@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/main_login}"> <!-- 使用 layout/main 模板 -->
+<head>
+<meta charset="UTF-8">
+<title th:fragment="title">網銀轉帳</title> <!-- 替換 layout/main 的 ~{::title} -->
+</head>
+<body>
+
+	<div th:fragment="content">  <!-- 替換 layout/main 的 ~{::content} -->
+
+		<div class="text-center fs-1 mt-5 mb-3 ">臺幣轉帳</div>
+		
+			<div class="container">
+				<div class="row justify-content-center">
+					<div class="bg-light p-4 rounded col-md-4 p-5 ">
+						<form  th:action="@{/bank/transaction/transfer/check}" th:object="${transferDto}"  method="post" class="d-flex flex-column">
+							<div class="mb-3">
+									<label class="form-label col-form-label-lg" for="fromAccountNumber">轉出帳號</label>
+									<select class="form-select form-control-lg " id="fromAccountNumber" th:field="*{fromAccountNumber}">
+										<option th:each="twdAccount:${twdAccounts}"
+						                        th:text="${twdAccount.getCurrency.getName} +'帳號 ( ' + ${twdAccount.getAccountNumber} + ' )'"
+						                        th:value="${twdAccount.getAccountNumber}" 
+						                        >
+						                </option>	
+									</select>
+							</div>
+							<div class="mb-3">
+								<label for="toAccountNumber" class="form-label col-form-label-lg">轉入帳號</label>
+								<input type="text" th:field="*{toAccountNumber}" 
+									class="form-control form-control-lg" id="toAccountNumber" required>
+							</div>
+							<div class="mb-3">
+								<label for="amount" class="form-label col-form-label-lg">轉帳金額</label>
+								<input type="text" th:field="*{amount}"  
+									class="form-control form-control-lg" id="amount" required>
+							</div>
+							<div class="mb-3">
+								<label for="description" class="form-label col-form-label-lg">轉帳備註</label>
+								<input type="text" th:field="*{description}"
+									class="form-control form-control-lg" id="description" required>
+							</div>
+		
+							<button type="submit" class="btn btn-lg mt-5 btn-success">進行轉帳</button>
+		
+						</form>
+					</div>
+				</div>
+				
+		</div>
+		
+	</div>
+	
+	
+	<!--  
+	<form th:action="@{/bank/transaction/transfer/check}" th:object="${transferDto}"  method="post">
+	
+		轉出帳號：<input type="text" th:field="*{fromAccountNumber}" placeholder="" required><p/>            
+		轉入帳號：<input type="text" th:field="*{toAccountNumber}"   placeholder="" required><p/>
+		轉帳金額：<input type="text" th:field="*{amount}"            placeholder="" required><p/>  <!-- amount < 0 直接跳錯誤  -- >
+		轉帳備註：<input type="text" th:field="*{description}"       placeholder="" ><p/>
+		
+		<button type="submit" >進行轉帳</button><p/>
+		
+	</form>
+	-->
+		
+</body>
+</html>

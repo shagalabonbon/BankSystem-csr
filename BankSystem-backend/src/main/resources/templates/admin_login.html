@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/main}">
+<head>
+<meta charset="UTF-8">
+<title th:fragment="title">管理後臺登入</title>
+</head>
+
+<body>
+
+    <div th:fragment="content">
+
+	<div class="text-center fs-1 pt-5 mb-3 ">管理員登入</div>
+
+	<div class="container">
+		<div class="row justify-content-center">
+			<div class="bg-light p-4 rounded col-md-4 p-5 ">
+				<form th:action="@{/bank/admin/login}" method="post"
+					class="d-flex flex-column">
+					<div class="mb-5">
+						<label for="idNumber" class="form-label col-form-label-lg">管理員帳號</label>
+						<input type="text" name="idNumber"
+							class="form-control form-control-lg" id="idNumber"
+							aria-describedby="emailHelp" required>
+					</div>
+					<div class="mb-5">
+						<label for="password" class="form-label col-form-label-lg">密碼</label>
+						<input type="password" name="password"
+							class="form-control form-control-lg" id="password" required>
+					</div>
+
+					<button type="submit" class="btn btn-primary btn-lg mt-5">登入</button>
+
+				</form>
+			</div>
+		</div>
+		
+		<nav class="nav mt-3 justify-content-center">
+			<a class="nav-link " href="/bank/login"><span class="text-dark fs-4"> >> 一般登入 </span></a>
+		</nav>
+		
+	</div>
+	
+	</div>
+
+
+
+</body>
+</html>

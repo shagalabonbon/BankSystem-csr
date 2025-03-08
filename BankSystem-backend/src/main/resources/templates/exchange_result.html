@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/main_login}"> <!-- 引入 Thymeleaf -->
+<head>
+<meta charset="UTF-8">
+<title th:fragment="title">交易結果</title>
+
+</head>
+<body>
+
+    <div th:fragment="content">
+
+		<div class="text-center fs-1 mt-5 mb-3 ">交易結果</div>  <!-- 用 th:if 改寫 交易成功/失敗 -->
+
+		<div class="container">
+			<div class="row justify-content-center ">
+				<div class="bg-light p-4 rounded col-md-4 p-5 ">
+
+					<table class="table border">
+						<thead>
+							<tr>
+								<th scope="col" colspan="2">項目明細</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<th scope="row">轉出帳號</th>
+								<td><span th:text="${exchangeDto.fromAccountNumber}"></span></td>
+							</tr>
+							<tr>
+								<th scope="row">轉入帳號</th>
+								<td><span th:text="${exchangeDto.toAccountNumber}"></span></td>
+							</tr>
+							<tr>
+								<th scope="row">換匯金額</th>
+								<td><span th:text="${exchangeDto.amount}"></span></td>
+							</tr>
+							<tr>
+								<th scope="row">交易匯率</th>
+								<td><span th:text="${targetRate}"></span></td>
+							</tr>
+							<tr>
+								<th scope="row">外幣金額</th>
+								<td><span th:text="${formatAmount}"></span></td>
+							</tr>
+							<tr>
+								<th scope="row">換匯備註</th>
+								<td><span th:text="${exchangeDto.description}"></span></td>
+							</tr>
+						</tbody>
+					</table>
+					
+					<form th:action="@{/bank/transaction/exchange}" method="get">
+						<button type="submit" class="btn btn-lg mt-5 btn-success" >返回首頁</button>
+					</form>	
+
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<!--  
+
+	<h1>交易結果</h1>
+	
+	<table>
+		<tr>
+			<td>項目</td>
+			<td>明細</td>
+		</tr>
+		<tr>
+			<td>轉出帳號</td>
+			<td><span th:text="${exchangeDto.fromAccountNumber}"></span></td>
+		</tr>
+		<tr>
+			<td>轉入帳號</td>
+			<td><span th:text="${exchangeDto.toAccountNumber}"></span></td>
+		</tr>
+		<tr>
+			<td>換匯金額</td>
+			<td><span th:text="${exchangeDto.amount}"></span></td>
+		</tr>
+		<tr>
+			<td>交易匯率</td>
+			<td><span th:text="${targetRate}"></span></td>
+		</tr>
+		<tr>
+			<td>外幣金額</td>
+			<td><span th:text="${formatAmount}"></span></td>
+		</tr>
+		<tr>
+			<td>轉帳備註</td>
+			<td><span th:text="${exchangeDto.description}"></span></td>
+		</tr>
+	</table>	
+	
+	<br>
+		
+	<a href="/bank/transaction/exchange">返回交易頁面</a>
+	
+	-->
+
+</body>
+</html>

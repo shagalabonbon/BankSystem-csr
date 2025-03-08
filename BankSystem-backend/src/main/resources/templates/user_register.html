@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/main}">
+<head>
+<meta charset="UTF-8">
+<title th:fragment="title">用戶註冊</title>
+
+</head>
+<body>
+
+	<div th:fragment="content">
+
+		<div class="text-center fs-1 pt-5 mb-3 ">用戶註冊</div>
+
+		<div class="container">
+			<div class="row justify-content-center">
+				<div class="bg-light p-4 rounded col-md-4 p-5 ">
+					<form th:action="@{/bank/user/register}" method="post"
+						onsubmit="return validatePassword()" class="d-flex flex-column">
+						<div class="mb-3">
+							<label for="username" class="form-label col-form-label-lg">姓名</label>
+							<input type="text" name="username" placeholder="Name"
+								class="form-control form-control-lg" id="username" required>
+						</div>
+						<div class="mb-3">
+							<label for="idNumber" class="form-label col-form-label-lg">身分證字號</label>
+							<input type="text" name="idNumber" placeholder="idNumber"
+								class="form-control form-control-lg" id="idNumber" required>
+						</div>
+						<div class="mb-3">
+							<label class="form-label col-form-label-lg" for="gender">性別</label> 
+							<select	class="form-select form-control-lg" id="gender" name="gender">
+								<option selected>請選擇</option>
+								<option value="male">男性</option>
+								<option value="female">女性</option>
+							</select>
+						</div>
+						<div class="mb-3">
+							<label for="email" class="form-label col-form-label-lg">電子郵件</label>
+							<input type="email" name="email" placeholder="Email"
+								class="form-control form-control-lg" id="email" required>
+						</div>
+						<div class="mb-3">
+							<label for="phone" class="form-label col-form-label-lg">電話</label>
+							<input type="text" name="phone" placeholder="Phone"
+								class="form-control form-control-lg" id="phone" required>
+						</div>
+						<div class="mb-3">
+							<label for="rawPassword" class="form-label col-form-label-lg">密碼</label>
+							<input type="password" name="rawPassword" placeholder="Password"
+								class="form-control form-control-lg" id="rawPassword" required>
+						</div>
+						<div class="mb-3">
+							<label for="checkPassword" class="form-label col-form-label-lg">確認密碼</label>
+							<input type="password" name="checkPassword"
+								placeholder="checkPassword" class="form-control form-control-lg"
+								id="checkPassword" required>
+						</div>
+
+
+						<button type="submit" class="btn btn-primary btn-lg mt-3">註冊</button>
+
+					</form>
+				</div>
+			</div>
+
+		</div>
+
+
+	</div>
+
+
+	<!--  
+	<h1> USER 註冊 </h1>
+	
+	<form th:action="@{/bank/user/register}" method="post" onsubmit="return validatePassword()">   <!-- onsubmit 會 return Boolean 決定表單是否提交 -- >
+	
+		姓名：
+		<input type="text" name="username" placeholder="Name" required><p/>
+		
+		身分證字號：
+		<input type="text" name="idNumber" placeholder="idNumber" required><p/>
+
+		性別：
+        <label><input type="radio" name="gender" value="male" required> 男</label>
+		<label><input type="radio" name="gender" value="female" required> 女</label><p/>
+       
+        郵件：
+        <input type="text" name="email" placeholder="Email" required><p/>            <!-- name 會自動映射到 @modelattribute 物件中的屬性 -- >
+	
+		電話：
+		<input type="text" name="phone" placeholder="Phone" required><p/>
+		
+		密碼：
+		<input type="password" name="rawPassword" placeholder="Password" required><p/>
+		
+		確認密碼：
+		<input type="password" name="checkPassword" placeholder="checkPassword"><p/>
+		
+		
+		<button type="submit" >註冊</button><p/>
+		
+	</form>
+	
+	-->
+
+
+	<script>
+		function validatePassword() {
+
+			var password = document.getElementsByName("password")[0].value;
+			var checkPassword = document.getElementsByName("checkPassword")[0].value;
+
+			if (password !== checkPassword) {
+				alert("輸入的密碼不一致!");
+				return false; // 密碼不一致，阻止提交
+			}
+		};
+	</script>
+
+
+
+</body>
+</html>

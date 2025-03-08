@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<!-- Thymeleaf -->
+<html xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{layout/main_login_admin}">
+<head>
+<meta charset="UTF-8">
+<title th:fragment="title">管理後臺</title>
+</head>
+
+<body>
+
+	<div th:fragment="content">
+		
+		<div class="container ">
+
+		<div class="text-center fs-1 mt-5 mb-5">
+			<h1>
+				親愛的 <span th:text="${loginAdminDto.username}"></span> <span
+					th:if="${loginAdminDto.gender=='female'}">女士</span> <span
+					th:if="${loginAdminDto.gender=='male'}">先生</span> 您好
+			</h1>
+		</div>
+
+		<table class="table">
+			<thead>
+				<tr>
+					<th scope="col">編號</th>
+					<th scope="col">用戶</th>
+					<th scope="col">性別</th>
+					<th scope="col">郵箱</th>
+					<th scope="col">手機</th>
+					<th scope="col">權限</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="allUserDto:${allUserDtos}">
+					<th scope="row" th:text="${ allUserDto.id }"></th>
+					<td th:text="${ allUserDto.username }"></td>
+					<td th:text="${ allUserDto.gender }"></td>
+					<td th:text="${ allUserDto.email }"></td>
+					<td th:text="${ allUserDto.phone }"></td>
+					<td th:text="${ allUserDto.role }"></td>
+				</tr>
+			</tbody>
+		</table>
+		
+		</div>
+
+	</div>
+
+
+	<!--  
+	<nav>
+		<a href="/bank/admin/user-approval">待審核</a> <br>
+		<a href="/bank/admin/user-manage">管理用戶</a> <br>
+		<a href="/bank/admin/statistics">統計資料</a>
+
+		<form th:action="@{/bank/logout}" method="post">
+    		<button type="submit">登出</button>
+		</form>
+	</nav> 
+	-->
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{layout/main_login_admin}">
+<head>
+<meta charset="UTF-8">
+<title th:fragment="title">待審核用戶</title>
+</head>
+<body>
+
+	<div th:fragment="content">
+
+
+		<div class="container">
+
+			<h1 class="text-center my-4">待審核用戶</h1> 
+
+			<table class="table">
+
+				<tr>
+					<th>編號</th>
+					<th>姓名</th>
+					<th>性別</th>
+					<th>郵件</th>
+					<th>電話</th>
+					<th>權限</th>
+					<th>審核</th>
+
+				</tr>
+
+				<tr th:each="pendingUser:${pendingUsers}">
+					<td th:text="${pendingUser.id}"></td>
+					<td th:text="${pendingUser.username}"></td>
+					<td th:text="${pendingUser.gender}"></td>
+					<td th:text="${pendingUser.email}"></td>
+					<td th:text="${pendingUser.phone}"></td>
+					<td th:text="${pendingUser.role}"></td>
+					<td>
+						<form
+							th:action="@{/bank/admin/user-approval/approve/{id}(id=${pendingUser.id})}"
+							method="post" style="display: inline;">
+							<button class="btn btn-success" type="submit"
+								onclick="alert('審核已送出')">通過</button>
+						</form>
+
+						<form th:action="@{/bank/admin/user-approval/reject/{id}(id=${pendingUser.id})}" method="post" style="display: inline;">
+							<button class="btn btn-danger" type="submit">不通過</button>
+						</form>
+
+					</td>
+				</tr>
+			</table>
+		</div>			
+	</div>
+
+
+</body>
+</html>

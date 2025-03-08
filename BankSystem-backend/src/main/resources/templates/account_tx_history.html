@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/main_login}"> <!-- 引入 Thymeleaf -->
+<head>
+<meta charset="UTF-8">
+<title th:fragment="title">交易紀錄</title> 
+
+</head>
+<body>
+
+	<div th:fragment="content">
+
+	<div class="text-center fs-1 mt-5 mb-3 ">交易紀錄查詢</div>   <!-- account 來自 TxHistoryPage -->
+	
+	<div class="container">
+	
+	<div class="d-flex my-3">
+	
+	<form class="d-inline-flex m-0" th:action="@{/bank/account/{id}/transaction-history/between(id=${account.id})}" method="get">
+		<span class="fs-5">交易區間：</span><input type="date" class="mx-2" name="startDate" > ~ <input type="date" class="mx-2" name="endDate">
+		<button class="mx-2 btn btn-success border border-dark" type="submit">查詢</button>
+	</form>
+	
+	<form class="d-inline-flex col-2 p-0" th:action="@{/bank/account/{id}/transaction-history/top50(id=${account.id})}" method="get">
+		<button class="mx-2 btn btn-success border border-dark" type="submit">檢視最近 50 筆交易</button>
+	</form>
+
+	</div>
+	
+	<div class="row">
+	
+	<table class="table ">
+		<tr>
+			<td>交易帳戶</td>
+			<td>目標帳戶</td>
+			<td>交易金額</td>
+			<td>交易時間</td>
+			<td>交易類型</td>
+			<td>交易狀態</td>
+			<td>備註</td>
+		</tr>
+		<tr th:each="transactionDto:${transactionDtos}">
+			<td><span th:text="${transactionDto.fromAccountNumber}"></span></td>
+			<td><span th:text="${transactionDto.toAccountNumber}"></span></td>
+			<td><span th:text="${transactionDto.amount}"></span></td>
+			<td><span th:text="${transactionDto.transactionTime}"></span></td>
+			<td><span th:text="${transactionDto.transactionType}"></span></td>
+			<td><span th:text="${transactionDto.status}"></span></td>
+			<td><span th:text="${transactionDto.description}"></span></td>
+		</tr>
+	
+	</table>
+	
+	
+	</div>
+	</div>
+	</div>
+	
+	<!-- 
+	<form th:action="@{/bank/account/{id}/transaction-history/top50(id=${account.id})}" method="get">
+		<button type="submit">檢視最近 50 筆交易</button>
+	</form>
+	-->
+	
+	
+	
+	
+	
+
+</body>
+</html>

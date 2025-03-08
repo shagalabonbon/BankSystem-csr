@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/main}">
+<head>
+	<meta charset="UTF-8">
+	<title th:fragment="title">忘記密碼</title>
+</head>
+<body>
+
+	<div th:fragment="content">
+
+		<div class="text-center fs-1 mt-5 mb-3 ">忘記密碼</div>
+
+		<div class="container">
+			<div class="row justify-content-center">
+				<div class="bg-light p-4 rounded col-md-4 p-5 ">
+					<form th:action="@{/bank/user/recovery}"  method="post" class="d-flex flex-column">
+
+						<div class="mb-3">
+							<label for="email" class="form-label col-form-label-lg">請輸入註冊電子郵件</label>
+							<input type="text" name="email" id="email" placeholder="Email" class="form-control form-control-lg" required>
+						</div>
+						
+						<p th:if="${errorMassage}!=null" th:text="${errorMassage}"></p>
+						
+						<button type="submit" class="btn btn-primary btn-lg mt-3" >確認</button>
+
+					</form>
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+
+</body>
+</html>

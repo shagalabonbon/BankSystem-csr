@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{layout/main_login}">
+<head>
+<meta charset="UTF-8">
+<title th:fragment="title">外幣帳號申請</title>
+</head>
+<body>
+
+	<div th:fragment="content">
+
+		<div class="text-center fs-1 mt-5 mb-3 ">外幣帳號申請</div>
+
+		<div class="container">
+			<div class="row justify-content-center">
+				<div class="bg-light p-4 rounded col-md-4 p-5 ">
+					<form th:action="@{/bank/account/foreign-account}" method="post"
+						class="d-flex flex-column">
+
+						<select class="form-select-lg" name="unregisterCurrencyCode">
+							<option th:each="unregisterCurrency:${unregisterCurrencies}"
+								th:text="${unregisterCurrency.getName} + ' (' + ${unregisterCurrency.getCode} + ')'"
+								th:value="${unregisterCurrency.getCode}"></option>
+						</select>
+
+						<button type="submit" class="btn btn-success btn-lg mt-5">申請帳號</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!--  
+	
+	<label>請選擇欲申請帳號 </label>
+	
+	<form th:action="@{/bank/account/foreign-account}" method="post">
+		
+		<select name = "unregisterCurrencyCode" >
+			<option 
+			        th:each="unregisterCurrency:${unregisterCurrencies}"
+					th:text="${unregisterCurrency.getName} + ' (' + ${unregisterCurrency.getCode} + ')'" 
+					th:value="${unregisterCurrency.getCode}"> </option>
+		</select>
+		
+		<button type="submit">送出申請</button>
+	</form>
+	-->
+
+
+</body>
+</html>
