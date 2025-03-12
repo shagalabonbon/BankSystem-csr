@@ -14,10 +14,10 @@ import com.example.demo.model.enums.TransactionType;
 public interface TransactionService {
 	
 	// 轉帳
-	TransactionRecord transfer(String fromAccountNumber,String toAccountNumber,BigDecimal amount,String description) ;
+	TransactionRecordDto transfer(String fromAccountNumber,String toAccountNumber,BigDecimal amount,String description) ;
 	
 	// 換匯
-	TransactionRecord exchange(String fromAccountNumber,String toAccountNumber,BigDecimal exchangeRate,BigDecimal amount,String description);
+	TransactionRecordDto exchange(String fromAccountNumber,String toAccountNumber,BigDecimal exchangeRate,BigDecimal amount,String description);
 }
 	
 

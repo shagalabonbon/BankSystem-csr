@@ -29,15 +29,15 @@ public interface AccountService {
 	void createAccount(User user,String curCode,String branchCode,String businessCode);
  
 	// 尋找指定用戶全部帳號
-	List<Account> findAllUserAccounts(Long userId); 
+	List<AccountDto> findAllUserAccounts(Long userId); 
 	
-	List<Account> findAllUserTWDAccounts(Long userId);
+	List<AccountDto> findAllUserTWDAccounts(Long userId);
 	
-	List<Account> findAllUserForeignAccounts(Long userId);
+	List<AccountDto> findAllUserForeignAccounts(Long userId);
 	
 	
 	// 尋找指定貨幣帳號 
-    Account getAccountByCurrencyCode(Long userId,String currencyCode);
+    AccountDto getAccountByCurrencyCode(Long userId,String currencyCode);
 		
 	// 獲取貨幣帳號總額
 	BigDecimal calcTotalBalance(UserDto userDto,Currency currency);

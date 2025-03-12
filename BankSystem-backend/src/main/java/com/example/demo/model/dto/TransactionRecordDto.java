@@ -32,5 +32,6 @@ public class TransactionRecordDto {
 	@Enumerated(EnumType.STRING)
     private TransactionStatus status;          // 交易狀態 ( 成功、失敗、待處理 )
 	
-	private String description;                // 交易備註
+	private String     description;            // 交易備註
+	
 }

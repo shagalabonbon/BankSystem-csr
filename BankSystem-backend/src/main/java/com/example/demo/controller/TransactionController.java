@@ -15,10 +15,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.aop.check.CheckUserSession;
+import com.example.demo.model.dto.AccountDto;
+import com.example.demo.model.dto.ExchangeDto;
+import com.example.demo.model.dto.ExchangePageDto;
 import com.example.demo.model.dto.ExchangeRate;
 import com.example.demo.model.dto.TransactionRecordDto;
+import com.example.demo.model.dto.TransferDto;
 import com.example.demo.model.dto.UserDto;
 import com.example.demo.model.entity.Account;
+import com.example.demo.model.entity.TransactionRecord;
 import com.example.demo.response.ApiResponse;
 import com.example.demo.service.AccountService;
 import com.example.demo.service.ExchangeRateService;
@@ -27,6 +32,8 @@ import com.example.demo.service.TransactionService;
 import jakarta.servlet.http.HttpSession;
 
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 
 /* 
@@ -54,137 +61,59 @@ public class TransactionController {
 	@Autowired
 	private AccountService accountService;
 	
-
-	@GetMapping("/transfer")               // 轉帳頁面
-	@CheckUserSession
-	public String transferPage(Model model,HttpSession session) {
-		
-		UserDto loginUserDto =  (UserDto)session.getAttribute("loginUserDto");
-		
-		List<Account> twdAccounts = accountService.findAllUserTWDAccounts(loginUserDto.getId());
-		
-		model.addAttribute("transferDto", new TransactionRecordDto()); // 當有使用 th:object，就必須要有已存入 model 的物件、或創建初始化的物件傳遞 
-		
-		model.addAttribute("twdAccounts", twdAccounts);
-		
-		return "transfer";            
-	}
+    // 轉帳 ( 建立一個  )
 	
-	@PostMapping("/transfer/check")
-	@CheckUserSession
-	public String checkTransfer(@ModelAttribute TransactionRecordDto transferDto,Model model ) {
+	@GetMapping("/transfer")               
+	public ResponseEntity<ApiResponse<List<AccountDto>>> transferPage( @RequestParam(value="id") Long userId ) {	
 		
-		model.addAttribute("transferDto",transferDto); // 將輸入資料傳遞到確認頁
+		List<AccountDto> twdAccountDtos = accountService.findAllUserTWDAccounts( userId );
 		
-		return "transfer_check";
+		return ResponseEntity.ok(ApiResponse.success("查詢成功", twdAccountDtos));            
 	}
 	
 	
-	@PostMapping("/transfer/confirm")
-	@CheckUserSession
-	public String doTransfer( @ModelAttribute TransactionRecordDto transferDto,Model model) {
+	@PostMapping("/transfer")
+	public ResponseEntity<ApiResponse<TransactionRecordDto>> doTransfer(@RequestBody TransferDto transferDto) {
 		
-		transactionService.transfer(transferDto.getFromAccountNumber(),transferDto.getToAccountNumber(),transferDto.getAmount(),transferDto.getDescription());
+		TransactionRecordDto transferRecordDto =  transactionService.transfer(transferDto.getFromAccountNumber(),transferDto.getToAccountNumber(),transferDto.getAmount(),transferDto.getDescription());
 		
-		model.addAttribute("transferDto",transferDto);
-		
-		return "transfer_result"; 
+		return ResponseEntity.ok(ApiResponse.success("轉帳成功",transferRecordDto ));
 	}
 	
 	
 	// 換匯  --------------------------------------
 
 	@GetMapping("/exchange")
-	@CheckUserSession
-	public String exchangePage(Model model,HttpSession session) { 
+	public ResponseEntity<ApiResponse<ExchangePageDto>> exchangePage(@RequestParam(value="id") Long userId) { 	
 		
-		// 執行匯率更新
+		// 頁面資料
 		
-		UserDto loginUserDto =  (UserDto)session.getAttribute("loginUserDto");
+		List<AccountDto> twdAccountDtos = accountService.findAllUserTWDAccounts(userId);
 		
-		List<Account> twdAccounts = accountService.findAllUserTWDAccounts(loginUserDto.getId());
+		List<AccountDto> foreignAccountDtos = accountService.findAllUserForeignAccounts(userId);
 		
-		List<ExchangeRate> foreignExchangeRates = exchangeRateService.getAllForeignAccountExchangeRate(loginUserDto.getId());
+		List<ExchangeRate> foreignExchangeRates = exchangeRateService.getAllForeignAccountExchangeRate(userId);	
 		
-		model.addAttribute("exchangeDto",new TransactionRecordDto()); // 傳遞初始化物件  
+		ExchangePageDto exchangeDto = new ExchangePageDto(twdAccountDtos,foreignAccountDtos,foreignExchangeRates);	
 		
-		model.addAttribute("twdAccounts",twdAccounts);  
-			
-		model.addAttribute("foreignExchangeRates",foreignExchangeRates);  
+		System.out.print(foreignAccountDtos);
 		
-		return "exchange";
+		return ResponseEntity.ok(ApiResponse.success("查詢成功",exchangeDto));
 	}
-	
-	
-	@PostMapping("/exchange/check")
-	@CheckUserSession
-	public String doExchange( @ModelAttribute TransactionRecordDto exchangeDto,@RequestParam String currencyCode,@RequestParam String targetRate,Model model,HttpSession session) {
-		
-		UserDto loginUserDto =  (UserDto)session.getAttribute("loginUserDto");
-		
-		String formatAmount =  String.format("%.2f",exchangeDto.getAmount().divide(new BigDecimal(targetRate),0, RoundingMode.HALF_UP).doubleValue());  // String.format 需要傳入 double、float 來顯示數字，BigDecimal 需要轉換 
-		
-		String toAccountNumber = accountService.getAccountByCurrencyCode(loginUserDto.getId(),currencyCode).getAccountNumber();
-		
-		exchangeDto.setToAccountNumber(toAccountNumber);
-		
-		model.addAttribute("exchangeDto",exchangeDto);
-		
-		model.addAttribute("targetRate",targetRate);
-		
-		model.addAttribute("formatAmount",formatAmount);  // 外幣金額
-			
-		return "exchange_check";
-	}
-	
-	
-	
-	@PostMapping("/exchange/confirm") 
-	@CheckUserSession
-	public String checkExchange(@ModelAttribute TransactionRecordDto exchangeDto,@RequestParam String targetRate,@RequestParam String formatAmount,Model model) {
+
+
+	@PostMapping("/exchange") 
+	public ResponseEntity<ApiResponse<TransactionRecordDto>> doExchange(@RequestBody ExchangeDto exchangeDto) {
 		
 		// 進行換匯 ***
 		
-		transactionService.exchange(exchangeDto.getFromAccountNumber(),exchangeDto.getToAccountNumber(),new BigDecimal(targetRate),exchangeDto.getAmount(),exchangeDto.getDescription());
+		TransactionRecordDto exchangeRecordDto = transactionService.exchange(exchangeDto.getFromAccountNumber(),exchangeDto.getToAccountNumber(),exchangeDto.getExchangeRate(),exchangeDto.getAmount(),exchangeDto.getDescription());
 		
-		model.addAttribute("exchangeDto",exchangeDto);
-		
-        model.addAttribute("targetRate",targetRate);
-		
-		model.addAttribute("formatAmount",formatAmount);
-		
-		// 有錯誤則顯示錯誤頁面
-		
-		return "exchange_result";
+		return ResponseEntity.ok(ApiResponse.success("換匯成功",exchangeRecordDto ));  // 回傳交易資料 TransactionRecordDto
 	}
+		
 	
-	
-	
-	
-	
-	/* 匯率爬蟲 - 完成 */
-	
-//	@GetMapping("/exchange-rate")
-//	public String exchangeRatePage(Model model,HttpSession session) {
-//		
-//		List<ExchangeRate> exchangeRates = exchangeRateService.getTwdExchangeRate();
-//		
-//		// 確保列表非空，並提取第一個 ExchangeRate 的更新時間
-//		
-//	    String renewTime = exchangeRates.get(0).getRenewTime();
-//		
-//		model.addAttribute("exchangeRates",exchangeRates);
-//		
-//		model.addAttribute("renewTime",renewTime);
-//		
-//		// 存入 session 以便登入期間取用 ( 測試非必須 )
-//		
-//		session.setAttribute("exchangeRates",exchangeRates);
-//		
-//		return "exchange_rate";
-//		
-//	}
-	
+	// 匯率爬蟲 ---------------------------------------------------------------
 	
 	@GetMapping("/exchange-rate")
 	public ResponseEntity<ApiResponse<List<ExchangeRate>>> getAllExchangeRates() {

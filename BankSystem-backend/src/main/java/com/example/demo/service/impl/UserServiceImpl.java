@@ -159,7 +159,7 @@ public class UserServiceImpl implements UserService {
 
 
 	@Override
-	public void updateUser( UserDto userDto ) {        // 登入後才可修改
+	public void updateUser( UserDto userDto ) {       
 		
 		// 查詢用戶
 		
@@ -189,8 +189,7 @@ public class UserServiceImpl implements UserService {
 			user.setPhone(userDto.getPhone());
 		}	
 		
-		userRepository.save(user);
-		
+		userRepository.save(user);		
 		
 		
 	}

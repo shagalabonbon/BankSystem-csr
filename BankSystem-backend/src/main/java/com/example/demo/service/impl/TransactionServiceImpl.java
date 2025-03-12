@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.exception.accountexception.AccountNotFoundException;
+import com.example.demo.model.dto.TransactionRecordDto;
 import com.example.demo.model.entity.Account;
 import com.example.demo.model.entity.TransactionRecord;
 import com.example.demo.model.enums.TransactionStatus;
@@ -43,7 +44,7 @@ public class TransactionServiceImpl implements TransactionService {
 		isolation = Isolation.READ_COMMITTED,
 		rollbackFor = {RuntimeException.class}
     )
-	public TransactionRecord transfer(String fromAccountNumber,String toAccountNumber, BigDecimal amount, String description) {
+	public TransactionRecordDto transfer(String fromAccountNumber,String toAccountNumber, BigDecimal amount, String description) {
 		
 		TransactionRecord transactionRecord = new TransactionRecord();
 		
@@ -105,7 +106,7 @@ public class TransactionServiceImpl implements TransactionService {
 			
 		}
 		
-		return transactionRecord;
+		return modelMapper.map(transactionRecord, TransactionRecordDto.class);
 	}
 
 	
@@ -116,7 +117,7 @@ public class TransactionServiceImpl implements TransactionService {
 		isolation = Isolation.READ_COMMITTED,
 		rollbackFor = {RuntimeException.class}
 	)
-	public TransactionRecord exchange(String fromAccountNumber,String toAccountNumber,BigDecimal exchangeRate, BigDecimal amount ,String description) {
+	public TransactionRecordDto exchange(String fromAccountNumber,String toAccountNumber,BigDecimal exchangeRate, BigDecimal amount ,String description) {
 		
 		TransactionRecord transactionRecord = new TransactionRecord();
 		
@@ -191,7 +192,7 @@ public class TransactionServiceImpl implements TransactionService {
 				
 		}
 		
-		return transactionRecord;
+		return modelMapper.map(transactionRecord, TransactionRecordDto.class);
 	}
 
 

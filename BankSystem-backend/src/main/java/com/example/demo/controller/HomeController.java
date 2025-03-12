@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.model.dto.AccountDto;
 import com.example.demo.model.dto.ExchangeRate;
 import com.example.demo.model.dto.UserDto;
 import com.example.demo.model.entity.Account;
@@ -66,9 +67,9 @@ public class HomeController {
 			
 			// 尋找全部帳號，並用 model 傳遞
 			
-			List<Account> accounts = accountService.findAllUserAccounts(loginUserDto.getId());
+			List<AccountDto> accountDtos = accountService.findAllUserAccounts(loginUserDto.getId());
 			
-			model.addAttribute("accounts",accounts);
+			model.addAttribute("accounts",accountDtos);
 			
 			return "user_homepage";
 		}

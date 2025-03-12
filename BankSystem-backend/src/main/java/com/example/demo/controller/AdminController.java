@@ -18,6 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.demo.aop.check.CheckAdminSession;
 import com.example.demo.config.MessageConfig;
+import com.example.demo.model.dto.StatisticDto;
 import com.example.demo.model.dto.UserDto;
 import com.example.demo.model.entity.User;
 import com.example.demo.response.ApiResponse;
@@ -66,29 +67,15 @@ public class AdminController {
 		// 有參數時，回傳指定用戶資料	
 			
 			userDtos = userService.getUserByIdNumber(idNumber);
-			
-			System.out.print(userDtos);
 		}
 			
 		return ResponseEntity.ok(ApiResponse.success("Data Fetched",userDtos ));
 	}
 	
-	// 管理指定用戶 
-	
-//	@GetMapping("/user-manage")	
-//	private String manageCertainUser( @RequestParam String idNumber ) {  // redirect會清空 model 資料，因此要用 redirectAttributes 儲存
-//		
-//		List<UserDto> certainUserDtos = userService.getUserByIdNumber(idNumber);
-//		
-//		
-//		// 產生 UserNotFoundException 會回傳錯誤到原頁面
-//		
-//		return "redirect:/bank/admin/user-manage";
-//	}
 	
 	// 變更用戶資料
 	
-	@GetMapping("/user-manage/{id}/update")
+	@GetMapping("/user-manage/update/{id}")
 	private String adminUpdatePage(@PathVariable("id") Long userId,Model model) { 
 		
 		UserDto manageUserDto = userService.getUser(userId);
@@ -99,18 +86,18 @@ public class AdminController {
 	}
 	
 	
-	@PutMapping("/user-manage/{id}/update")
+	@PutMapping("/user-manage/update/{id}")
 	private ResponseEntity<ApiResponse<String>> updateUser( @RequestBody UserDto manageUserDto) { 
 		
 		userService.updateUser(manageUserDto);
 					                            		
-		return ResponseEntity.ok(ApiResponse.success("修改成功",""));
+		return ResponseEntity.ok(ApiResponse.success("資料修改成功","用戶ID："+ manageUserDto.getId() ));
 	}
 	
 	
 	// 刪除用戶
 	
-	@PostMapping("/user-manage/{id}/remove")
+	@PostMapping("/user-manage/remove/{id}")
 	private String deleteUser( @PathVariable("id") Long userId) { 
 
 		userService.deleteUser(userId);  // 刪除用戶
@@ -181,23 +168,15 @@ public class AdminController {
 	
 	
 	@GetMapping("/statistics")
-	public String statisticPage(Model model) {
+	public ResponseEntity<ApiResponse<StatisticDto>> statistics() {
 		
 		// 計算性別數量
 		
 		Long maleCount = userService.calcUserQuantityByGender("male");
 		
 		Long femaleCount = userService.calcUserQuantityByGender("female");
-		
-		model.addAttribute("maleCount", maleCount );
-		
-		model.addAttribute("femaleCount", femaleCount );
-		
-		// 可添加其他統計 ...
-		
-		model.addAttribute("showChart", true );  // 用來顯示 main 模板中 GoogleChart 的 JS ( main_login_admin.html row-10 )
-		
-		return "admin_statistics";
+				
+		return ResponseEntity.ok(ApiResponse.success( "統計資料查詢成功", new StatisticDto(maleCount,femaleCount)));
 	}
 	
 	

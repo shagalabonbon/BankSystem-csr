@@ -28,7 +28,7 @@ public class AccountDto {
 	
 	private BigDecimal    balance;          // 帳戶餘額
 	
-	private Timestamp     createTime;    // 開戶時間
+	private Timestamp     createTime;       // 開戶時間
 	
 	@Enumerated(EnumType.STRING)
 	private AccountStatus status;
@@ -36,6 +36,8 @@ public class AccountDto {
 	@Enumerated(EnumType.STRING)
 	private AccountType   accountType;
 	
-	private Currency      currency;
+	private Currency      currency;	
+	
+	private UserDto       userDto;
 	
 }

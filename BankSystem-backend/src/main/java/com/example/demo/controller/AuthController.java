@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,10 +19,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.example.demo.config.MessageConfig;
 import com.example.demo.model.dto.LoginDto;
 import com.example.demo.model.dto.UserDto;
+import com.example.demo.model.dto.UserRecoveryDto;
 import com.example.demo.model.entity.User;
 import com.example.demo.response.ApiResponse;
 import com.example.demo.service.AuthService;
 import com.example.demo.service.GmailService;
+import com.example.demo.service.RedisService;
 import com.example.demo.service.UserService;
 import com.google.api.services.gmail.Gmail;
 
@@ -40,6 +43,9 @@ public class AuthController {
 
 	@Autowired
 	private GmailService gmailService;
+	
+	@Autowired
+	private RedisService redisService;
 
 	@Autowired
 	private MessageConfig message;
@@ -52,7 +58,7 @@ public class AuthController {
 	@PostMapping("/userlogin")
 	public ResponseEntity<ApiResponse<String>> login( @RequestBody LoginDto loginDto ) {
 
-		// 登入獲取 JWT
+		// 登入獲取 JWT ( 給前端並於請求中附帶 )
 		String jwt = authService.login( loginDto.getIdNumber(), loginDto.getPassword() );
 
 		return ResponseEntity.ok( ApiResponse.success("登入成功",jwt) );
@@ -82,85 +88,52 @@ public class AuthController {
 
 	// 忘記密碼 -----------------------------------------------------------
 
-	@GetMapping("/user/recovery")
-	private String recoveryPage() {
+	@PostMapping("/recovery")
+	public ResponseEntity<ApiResponse<UserRecoveryDto>> sendRecoveryMail(@RequestBody UserRecoveryDto userRecoveryDto) {
 
-		return "user_recovery";
-	}
-
-	@GetMapping("/user/recovery/continue")
-	private String checkCodePage() {
-
-		return "user_recovery_verify";
-	}
-
-	@GetMapping("/user/recovery/reset")
-	private String resetPage() {
-
-		return "user_recovery_reset";
-	}
-
-	@GetMapping("/user/recovery/result")
-	private String recoveryResult() {
-
-		return "user_recovery_result";
-	}
-
-	@PostMapping("/user/recovery")
-	public String sendRecoveryMail(@RequestParam String email, RedirectAttributes redirectAttributes,
-			HttpSession session) {
-
-		UserDto userDto = userService.getUserByEmail(email); // 找不到會拋出 null
+		UserDto userDto = userService.getUserByEmail(userRecoveryDto.getEmail()); // 找不到會拋出 null
 
 		if (userDto == null) {
-
-			redirectAttributes.addAttribute("errorMessage", "Email 不存在");
-
-			return "redirect:/bank/user/recovery";
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponse.error(404,"查無資料"));
 		}
-
-		// 傳遞使用者資料
-
-		session.setAttribute("userDto", userDto);
 
 		// 發送驗證碼郵件
 
 		try {
 			Gmail service = gmailService.getGmailService();
-//			gmailService.sendMessage(service, "me", gmailService.createEmail(email, message.getResetGmailHead(),
-//					message.getResetGmailBody() + authService.generateAuthCode())); // 使用 @Value 帶入的屬性
+			gmailService.sendMessage(service, "me", gmailService.createEmail(userRecoveryDto.getEmail(), message.getResetGmailHead(),
+			message.getResetGmailBody() + authService.generateAuthCode())); // 使用 @Value 帶入的屬性
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		return "redirect:/bank/user/recovery/continue";
+		return ResponseEntity.ok(ApiResponse.success("用戶確認",userRecoveryDto));
 	}
 
-	@PostMapping("/user/recovery/continue")
-	public String checkAuthCode(@RequestParam String authCode, RedirectAttributes redirectAttributes,
-			HttpSession session) {
+	@PostMapping("/recovery/verify")
+	public ResponseEntity<ApiResponse<UserRecoveryDto>> checkAuthCode(@RequestBody UserRecoveryDto userRecoveryDto) {
 
-		if (!authService.checkAuthCode(authCode)) {
+		if (!authService.checkAuthCode(userRecoveryDto.getAuthCode())) {
 
-			redirectAttributes.addAttribute("errorMessage", "驗證碼輸入錯誤");
-
-			return "redirect：/bank/user/recovery/continue";
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponse.error(404,"驗證碼錯誤"));
 		}
 
-		return "redirect:/bank/user/recovery/reset";
+		return ResponseEntity.ok(ApiResponse.success("驗證碼確認",userRecoveryDto));
 	}
 
-	@PostMapping("/user/recovery/reset")
-	public String resetPassword(@RequestParam String newPassword, HttpSession session) {
+	@PostMapping("/recovery/reset")
+	public ResponseEntity<ApiResponse<String>> resetPassword(@RequestBody UserRecoveryDto userRecoveryDto) {
 
-		UserDto userDto = (UserDto) session.getAttribute("userDto");
+		UserDto userDto = userService.getUserByEmail(userRecoveryDto.getEmail());
+		
+		System.out.print(userDto);
 
-		userService.updatePassword(userDto.getId(), newPassword);
+		userService.updatePassword(userDto.getId(), userRecoveryDto.getNewPassword());
 
-		return "redirect:/bank/user/recovery/result";
+		return ResponseEntity.ok(ApiResponse.success("密碼已重設","帳號重設成功"));
 	}
 
-	// 註冊服務 ------------------------------------------
+	// 註冊服務 ----------------------------------------
 
 	@PostMapping("/register")
 	public ResponseEntity<ApiResponse<UserDto>> register( @RequestBody User user ) { // @RequestBody 將前端資料 (JSON) 轉為 Java 物件

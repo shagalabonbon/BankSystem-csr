@@ -47,6 +47,7 @@ public class TransactionRecord {                // 交易紀錄
 	private TransactionStatus status;           // 交易狀態 ( 成功、失敗、待處理 )
 	
 	private String description;                 // 交易備註 
+
 	
 	@ManyToOne
 	@JoinColumn(name = "account_id")

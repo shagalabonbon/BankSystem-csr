@@ -74,7 +74,7 @@ public class AccountServiceImpl implements AccountService {
 	// 創建帳戶 ( 台幣 53、外幣 87 )
 	
 	@Override
-	public void createAccount(User user,String curCode,String branchCode,String businessCode) {
+	public void createAccount( User user,String curCode,String branchCode,String businessCode) {
 		
 		// 審核通過註冊帳號  
 		
@@ -104,44 +104,53 @@ public class AccountServiceImpl implements AccountService {
 	//-----------------------------------------------------------
 
 	@Override
-	public List<Account> findAllUserAccounts(Long userId) {
+	public List<AccountDto> findAllUserAccounts(Long userId) {
 		
 		User user = userRepository.findById(userId).orElseThrow(()->new UserNotFoundException()); 
 		
-		List<Account> account = accountRepository.findAllAccountsByUser(user);
-		
-		return account;
+		List<AccountDto> accountDtos = accountRepository.findAllAccountsByUser(user)
+													 	.stream()
+													 	.map(a-> modelMapper.map(a, AccountDto.class))
+													 	.toList();
+		return accountDtos;
 	}
 	
 	@Override
-	public List<Account> findAllUserTWDAccounts(Long userId) {
+	public List<AccountDto> findAllUserTWDAccounts(Long userId) {
 		
 		User user = userRepository.findById(userId).orElseThrow(()->new UserNotFoundException()); 
 		
-		List<Account> accounts = accountRepository.findAllAccountsByUser(user).stream().filter(a->a.getCurrency().getCode().equals("TWD")).toList();
-		
-		return accounts;
+		List<AccountDto> accountDtos = accountRepository.findAllAccountsByUser(user)
+				                                     .stream()
+				                                     .filter(a->a.getCurrency().getCode().equals("TWD"))
+				                                     .map(a->modelMapper.map(a, AccountDto.class))
+				                                     .toList();
+		return accountDtos;
 	}
 	
 	
 	@Override
-	public List<Account> findAllUserForeignAccounts(Long userId) {
+	public List<AccountDto> findAllUserForeignAccounts(Long userId) {
 		
 		User user = userRepository.findById(userId).orElseThrow(()->new UserNotFoundException()); 
 		
-		List<Account> accounts = accountRepository.findAllAccountsByUser(user).stream().filter(a->!a.getCurrency().getCode().equals("TWD")).toList();
-		
-		return accounts;
-		
+		List<AccountDto> accountDtos = accountRepository.findAllAccountsByUser(user)
+													 	.stream()
+													 	.filter(a->!a.getCurrency().getCode().equals("TWD"))
+													 	.map(a->modelMapper.map(a, AccountDto.class))
+													 	.toList();
+		return accountDtos;	
 	}
 
 	
 	@Override
-	public Account getAccountByCurrencyCode(Long userId, String currencyCode) {
+	public AccountDto getAccountByCurrencyCode(Long userId, String currencyCode) {
 		Account account = accountRepository.findByUserIdAndCurrency_Code(userId,currencyCode)
-                .orElseThrow(()->new AccountNotFoundException());
-
-		return account;
+										   .orElseThrow(()->new AccountNotFoundException());
+		
+		AccountDto accountDto = modelMapper.map(account, AccountDto.class);
+		
+		return accountDto;
 		
 	}
 

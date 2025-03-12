@@ -50,7 +50,7 @@ public class CurrencyServiceImpl implements CurrencyService {
 	    
 	    // 取得用戶已註冊帳戶的貨幣清單
 	    List<Currency> registeredCurrencies = accountService.findAllUserAccounts(userId).stream()
-	                                                        .map(Account::getCurrency)
+	                                                        .map(AccountDto::getCurrency)
 	                                                        .toList();
 	    
 	    // 篩選出未註冊的貨幣清單

@@ -27,6 +27,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.servlet.http.HttpSession;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 /* 使用者
@@ -84,7 +85,7 @@ public class UserController {
 	
 	// 使用者更新服務 ----------------------------------------------    
 	
-	@PostMapping("/update/{id}")
+	@PutMapping("/update")
 	public ResponseEntity<ApiResponse<UserDto>> updateUserDetail( @RequestBody UserDto loginUserDto ) throws UserNotFoundException{
 		
 	    userService.updateUser( loginUserDto );
