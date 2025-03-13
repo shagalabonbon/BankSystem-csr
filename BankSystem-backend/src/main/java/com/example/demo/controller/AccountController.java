@@ -112,40 +112,31 @@ public class AccountController {
 	}
 	
 	
-	@GetMapping("/foreigns/result")
-	public String createResultPage(@RequestParam String unregisterCurrencyCode , HttpSession session,Model model) {
-		
-		UserDto loginUserDto = (UserDto)session.getAttribute("loginUserDto");
-		
-        AccountDto newForeignAccountDto = accountService.getAccountByCurrencyCode(loginUserDto.getId(),unregisterCurrencyCode);  
-		
-		model.addAttribute("newForeignAccount",newForeignAccountDto);
-			
-		return "account_foreign_register_result";
-
-	}
+//	@GetMapping("/foreigns/result")
+//	public String createResultPage(@RequestParam String unregisterCurrencyCode , HttpSession session,Model model) {
+//		
+//		UserDto loginUserDto = (UserDto)session.getAttribute("loginUserDto");
+//		
+//        AccountDto newForeignAccountDto = accountService.getAccountByCurrencyCode(loginUserDto.getId(),unregisterCurrencyCode);  
+//		
+//		model.addAttribute("newForeignAccount",newForeignAccountDto);
+//			
+//		return "account_foreign_register_result";
+//
+//	}
 		
 	
 	// 交易紀錄 -------------------------------------------------------------------
 	
 	@GetMapping("/{id}/histories")
-	public String TxHistoryPage(@PathVariable("id") Long accountId , Model model , HttpSession session) {
-		
-		// 驗證帳戶 ( 可改成從 session 獲取 )
-		
-		UserDto loginUserDto = (UserDto)session.getAttribute("loginUserDto");
-		
-		Account account = accountRepository.findByUserIdAndId(loginUserDto.getId(), accountId).orElseThrow( ()->new AccountNotFoundException() );
-		
-		model.addAttribute("account",account);
-		
+	public ResponseEntity<ApiResponse<List<TransactionRecordDto>>> TxHistoryPage(@PathVariable("id") Long accountId ) {
+				
 		// 尋找所有交易紀錄
 		
 		List<TransactionRecordDto> transactionDtos = transactionRecordService.getAllTransactionHistory(accountId);
 		
-		model.addAttribute("transactionDtos",transactionDtos);
 		
-		return "account_tx_history";
+		return ResponseEntity.ok(ApiResponse.success("交易紀錄查詢成功", transactionDtos));
 		
 	}
 	

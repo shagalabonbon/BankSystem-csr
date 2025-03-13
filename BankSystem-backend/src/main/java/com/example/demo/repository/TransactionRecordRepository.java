@@ -17,10 +17,10 @@ import com.example.demo.model.entity.TransactionRecord;
 public interface TransactionRecordRepository extends JpaRepository<TransactionRecord,Long>  {
 	
 	// 尋照前50筆
-	List<TransactionRecordDto> findTop50ByAccountIdOrderByTransactionTimeDesc(Long accountId);
+	List<TransactionRecord> findTop50ByAccountIdOrderByTransactionTimeDesc(Long accountId);
 	
 	// 尋找所有
-	List<TransactionRecordDto> findByAccountIdOrderByTransactionTimeDesc(Long accountId);
+	List<TransactionRecord> findByAccountIdOrderByTransactionTimeDesc(Long accountId);
 	
 	// 尋找區間 ( startDate 0:00:00 ~ endDate 23:59:59)
 	@Query(value = """ 
@@ -29,7 +29,7 @@ public interface TransactionRecordRepository extends JpaRepository<TransactionRe
 			AND transaction_time Between :startDate AND DATE_ADD(:endDate, INTERVAL 1 DAY) - INTERVAL 1 SECOND 
 			ORDER BY transaction_time desc
 			""" , nativeQuery = true)
-	List<TransactionRecordDto> findRecordsByChosenTime( @Param("id")        Long accountId, 
+	List<TransactionRecord> findRecordsByChosenTime( @Param("id")        Long accountId, 
 			                     	                 @Param("startDate") Date startDate,
 			                                         @Param("endDate")   Date endDate);
 
