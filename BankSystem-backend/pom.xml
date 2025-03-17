@@ -10,8 +10,9 @@
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.example</groupId>
-	<artifactId>springboot-mvc-ssr-banksystem</artifactId>
+	<artifactId>springboot-banksystem-csr</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	
 	<name>springboot-mvc-ssr-banksystem</name>
 	<description>Senior Project </description>
 	<url />
@@ -81,11 +82,6 @@
 			<version>5.4.1.Final</version>
 		</dependency>
 
-		<!-- thymeleaf 前端渲染 -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-thymeleaf</artifactId>
-		</dependency>
 
 		<!-- jsoup 網頁中抓取和解析 HTML 數據-->
 		<dependency>
@@ -167,7 +163,6 @@
 		</dependency>
 		
 		<!-- JWT ( jjwt 庫 ) -->
-		
 		<dependency>
     		<groupId>io.jsonwebtoken</groupId>
     		<artifactId>jjwt</artifactId>
