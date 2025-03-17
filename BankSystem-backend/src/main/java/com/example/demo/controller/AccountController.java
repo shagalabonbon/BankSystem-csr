@@ -108,22 +108,9 @@ public class AccountController {
 		
 		accountService.createAccount(loginUser,unregisterCode,"1000","87");
 		
-		return ResponseEntity.ok(ApiResponse.success("註冊成功", "註冊成功"));
+		return ResponseEntity.ok(ApiResponse.success("帳號申請成功", "帳號申請成功"));
 	}
 	
-	
-//	@GetMapping("/foreigns/result")
-//	public String createResultPage(@RequestParam String unregisterCurrencyCode , HttpSession session,Model model) {
-//		
-//		UserDto loginUserDto = (UserDto)session.getAttribute("loginUserDto");
-//		
-//        AccountDto newForeignAccountDto = accountService.getAccountByCurrencyCode(loginUserDto.getId(),unregisterCurrencyCode);  
-//		
-//		model.addAttribute("newForeignAccount",newForeignAccountDto);
-//			
-//		return "account_foreign_register_result";
-//
-//	}
 		
 	
 	// 交易紀錄 -------------------------------------------------------------------
@@ -137,48 +124,6 @@ public class AccountController {
 		
 		
 		return ResponseEntity.ok(ApiResponse.success("交易紀錄查詢成功", transactionDtos));
-		
-	}
-	
-	@GetMapping("/{id}/histories/interval")
-	public String intervalTxHistory(@PathVariable("id") Long accountId, @RequestParam String startDate,@RequestParam String endDate,Model model,HttpSession session) {
-		
-		// 傳遞 account 資料 ( 可改成從 session 獲取 )
-		
-		UserDto loginUserDto = (UserDto)session.getAttribute("loginUserDto");
-				
-		Account account = accountRepository.findByUserIdAndId(loginUserDto.getId(), accountId).orElseThrow( ()->new AccountNotFoundException() );
-				
-		model.addAttribute("account",account);
-		
-		// 傳遞 transactionDtos 資料
-		
-		List<TransactionRecordDto> chosenTransactionDtos = transactionRecordService.getIntervalTransactionHistory(accountId,startDate,endDate);
-		
-		model.addAttribute("transactionDtos",chosenTransactionDtos);  // 覆蓋 transactionDtos 以更新前端顯示資料 
-		
-		return "account_tx_history";
-		
-	}
-	
-	@GetMapping("/{id}/histories/top50")
-	public String top50TxHistory( @PathVariable("id") Long accountId , Model model,HttpSession session) {
-		
-		// 傳遞 account 資料 ( 可改成從 session 獲取 )
-		
-		UserDto loginUserDto = (UserDto)session.getAttribute("loginUserDto");
-						
-		Account account = accountRepository.findByUserIdAndId(loginUserDto.getId(), accountId).orElseThrow( ()->new AccountNotFoundException() );
-						
-		model.addAttribute("account",account);
-		
-		// 傳遞 transactionDtos 資料
-		
-		List<TransactionRecordDto> top50TransactionDtos = transactionRecordService.getTop50TransactionHistory(accountId);
-		
-		model.addAttribute("transactionDtos",top50TransactionDtos);
-		
-		return "account_tx_history";
 		
 	}
 	
