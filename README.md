@@ -1,4 +1,4 @@
-專案名稱： 個人網銀系統 
+專案名稱： 個人網銀系統 /n
 設計架構： CSR
 IDE    ： Eclipse、VScode
 前端開發： Html、CSS、Javascript、ReactJs
