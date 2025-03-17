@@ -1,8 +1,8 @@
-專案名稱： 個人網銀系統 /n
-設計架構： CSR
-IDE    ： Eclipse、VScode
-前端開發： Html、CSS、Javascript、ReactJs
-後端開發： Java、SpringBoot
+專案名稱： 個人網銀系統  
+設計架構： CSR  
+IDE    ： Eclipse、VScode  
+前端開發： Html、CSS、Javascript、ReactJs  
+後端開發： Java、SpringBoot  
 資料庫  ： MySQL
 其他技術： Redis、Jsoup爬蟲
 
